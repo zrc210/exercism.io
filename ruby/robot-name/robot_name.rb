@@ -1,41 +1,44 @@
+require 'set'
+
 module BookKeeping
   VERSION = 2
 end
 
 class Database
   def initialize
-    @@storage ||= {}
+    @storage = Set.new
   end
 
   def add(name)
-    storage[name] = true
-    nil
+    storage.add(name)
+    self
   end
 
-  def remove(name)
+  def delete(name)
     storage.delete(name)
-    nil
+    self
   end
 
   def exists?(name)
-    storage.key?(name)
+    storage.include?(name)
   end
 
   private
 
-  def storage
-    @@storage
-  end
+  attr_reader :storage
 end
 
 class NameGenerator
+  ALPHABET = [*'A'..'Z'].freeze
+  private_constant :ALPHABET
+
   def initialize(randomizer: Random.new, database: Database.new)
     @randomizer = randomizer
     @database = database
   end
 
   def generate(old_name = nil)
-    database.remove(old_name) unless old_name
+    database.delete(old_name) unless old_name
     generated = name
     generated = name while database.exists?(generated)
     database.add(generated)
@@ -44,23 +47,21 @@ class NameGenerator
 
   private
 
+  attr_reader :randomizer, :database
+
   def name
     prefix + digits
   end
 
-  attr_reader :randomizer, :database
-
-  ALPHABET = [*'A'..'Z'].freeze
-
   def prefix
-    2.times.reduce('') { |prefix| prefix << ALPHABET[random(26)] }
+    2.times.reduce('') { |prefix| prefix << ALPHABET[rand(ALPHABET.length)] }
   end
 
   def digits
-    format('%03i', random(1000))
+    format('%03i', rand(1000))
   end
 
-  def random(max)
+  def rand(max)
     randomizer.rand(max)
   end
 end
