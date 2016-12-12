@@ -1,19 +1,29 @@
 module BookKeeping
   VERSION = 3
 end
-module Pangram
-  ENGLISH_ALPHABET = [*'a'..'z'].freeze
-  class << self
-    def pangram?(string, alphabet = ENGLISH_ALPHABET)
-      normalized = normalize(string, alphabet)
-      normalized.chars.uniq.length == alphabet.length
-    end
 
-    private
+ENGLISH_ALPHABET = [*'a'..'z'].freeze
 
-    def normalize(string, alphabet)
-      delete_range = format('^%s-%s', *alphabet.minmax)
-      string.downcase.delete(delete_range)
-    end
+class Pangram
+  def self.pangram?(string)
+    new.pangram?(string)
+  end
+
+  def initialize(alphabet: ENGLISH_ALPHABET)
+    @alphabet = alphabet
+  end
+
+  def pangram?(string)
+    normalized = normalize(string)
+    normalized.chars.uniq.length == alphabet.length
+  end
+
+  private
+
+  attr_reader :alphabet
+
+  def normalize(string)
+    delete_range = format('^%s-%s', *alphabet.minmax)
+    string.downcase.delete(delete_range)
   end
 end
