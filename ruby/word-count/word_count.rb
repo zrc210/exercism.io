@@ -3,7 +3,7 @@ module BookKeeping
 end
 
 class Phrase
-  def initialize(phrase, valid_word_chars = /[A-Za-z0-9']+/)
+  def initialize(phrase, valid_word_chars = /[\w']+/)
     @phrase = phrase
     @valid_word_chars = valid_word_chars
   end
