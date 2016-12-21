@@ -5,7 +5,7 @@ end
 class Array
   def accumulate
     outputs = []
-    self.each do |element|
+    each do |element|
       outputs << yield(element)
     end
     outputs
