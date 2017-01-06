@@ -63,10 +63,6 @@ class BottleNumberOne < BottleNumber
 end
 
 class BottleNumberZero < BottleNumber
-  def container
-    'bottles'
-  end
-
   def action
     'Go to the store and buy some more'
   end
